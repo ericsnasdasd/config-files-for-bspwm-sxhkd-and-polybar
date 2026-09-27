@@ -1,0 +1,27 @@
+#!/bin/sh
+
+xrandr --output DP-0 --mode 1920x1080 -r 165 &
+
+# --- Autostart Applications ---
+sxhkd &
+picom --config /home/eric/.config/picom/picom.conf &
+
+setxkbmap us &
+
+# --- Polybar Launch ---
+for m in HDMI-0 DP-0 eDP-1; do
+    if xrandr --query | grep -q "^$m connected"; then
+        MONITOR=$m polybar main &
+        bspc monitor $m -d I II III IV V VI VII VIII IX
+    fi
+done
+
+# --- Appearance & Behavior ---
+bspc config border_width 2
+bspc config window_gap 12
+bspc config split_ratio 0.52
+bspc config borderless_monocle true
+bspc config gapless_monocle true
+
+# --- Background ---
+feh --bg-fill /home/eric/Documents/wallpaper.jpg
